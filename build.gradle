@@ -1,0 +1,73 @@
+plugins {
+	id 'java'
+	id 'application'
+	id 'org.javamodularity.moduleplugin' version '1.8.12'
+	id 'org.openjfx.javafxplugin' version '0.0.13'
+	id 'org.beryx.jlink' version '2.25.0'
+}
+
+group 'com.synapticloop'
+version '1.0.0'
+
+repositories {
+	mavenCentral()
+	maven {
+		url "https://repository.jboss.org/nexus/content/repositories/thirdparty-releases"
+	}
+}
+
+ext {
+	junitVersion = '5.10.0'
+}
+
+sourceCompatibility = '21'
+targetCompatibility = '21'
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+application {
+	mainModule = 'com.synapticloop.crosswordr'
+	mainClass = 'com.synapticloop.crosswordr.gui.MainApplication'
+}
+
+javafx {
+	version = '21'
+	modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+	implementation 'io.github.mkpaz:atlantafx-base:2.0.1'
+	implementation 'net.harawata:appdirs:1.2.2'
+	implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.3'
+	implementation 'org.apache.xmlgraphics:fop:2.4'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9.1'
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'org.json:json:20190722'
+	implementation 'org.slf4j:slf4j-api:1.7.26'
+	implementation 'org.slf4j:slf4j-log4j12:1.7.26'
+	implementation 'org.apache.logging.log4j:log4j-core:2.13.1'
+	implementation 'org.apache.pdfbox:pdfbox:2.0.16'
+	implementation 'org.jsoup:jsoup:1.13.1'
+	implementation 'commons-cli:commons-cli:1.4'
+
+	testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jlink {
+	imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+	options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+	launcher {
+		name = 'app'
+	}
+}
+
+jlinkZip {
+	group = 'distribution'
+}

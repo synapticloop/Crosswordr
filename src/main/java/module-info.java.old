@@ -1,0 +1,8 @@
+module com.synapticloop.crosswordr {
+	requires javafx.controls;
+	requires javafx.fxml;
+
+
+	opens com.synapticloop.crosswordr to javafx.fxml;
+	exports com.synapticloop.crosswordr;
+}
